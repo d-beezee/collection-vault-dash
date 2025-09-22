@@ -1,9 +1,15 @@
-import { useState, useEffect, useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Search, Plus, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2, Plus, Search } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 interface SearchResult {
   id: number;
@@ -18,41 +24,52 @@ interface AddGameDialogProps {
   onGameAdded: () => void;
 }
 
-export function AddGameDialog({ open, onOpenChange, username, token, onGameAdded }: AddGameDialogProps) {
+export function AddGameDialog({
+  open,
+  onOpenChange,
+  username,
+  token,
+  onGameAdded,
+}: AddGameDialogProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const { toast } = useToast();
 
-  const searchGames = useCallback(async (query: string) => {
-    if (query.length < 3) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsSearching(true);
-    try {
-      const response = await fetch(`http://localhost:3000/games?q=${encodeURIComponent(query)}`);
-      
-      if (!response.ok) {
-        throw new Error("Failed to search games");
+  const searchGames = useCallback(
+    async (query: string) => {
+      if (query.length < 3) {
+        setSearchResults([]);
+        return;
       }
 
-      const results: SearchResult[] = await response.json();
-      setSearchResults(results);
-    } catch (error) {
-      console.error("Error searching games:", error);
-      toast({
-        title: "Search failed",
-        description: "Unable to search for games. Please try again.",
-        variant: "destructive",
-      });
-      setSearchResults([]);
-    } finally {
-      setIsSearching(false);
-    }
-  }, [toast]);
+      setIsSearching(true);
+      try {
+        const response = await fetch(
+          `http://localhost:3000/games?q=${encodeURIComponent(query)}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to search games");
+        }
+
+        const results: { items: SearchResult[] } = await response.json();
+        setSearchResults(results.items);
+      } catch (error) {
+        console.error("Error searching games:", error);
+        toast({
+          title: "Search failed",
+          description: "Unable to search for games. Please try again.",
+          variant: "destructive",
+        });
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [toast]
+  );
 
   // Debounce search
   useEffect(() => {
@@ -66,14 +83,17 @@ export function AddGameDialog({ open, onOpenChange, username, token, onGameAdded
   const addGameToCollection = async (gameId: number) => {
     setIsAdding(true);
     try {
-      const response = await fetch(`http://localhost:3000/${username}/collections`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: gameId }),
-      });
+      const response = await fetch(
+        `http://localhost:3000/${username}/collection`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: gameId }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to add game");
@@ -92,7 +112,8 @@ export function AddGameDialog({ open, onOpenChange, username, token, onGameAdded
       console.error("Error adding game:", error);
       toast({
         title: "Failed to add game",
-        description: "Unable to add the game to your collection. Please try again.",
+        description:
+          "Unable to add the game to your collection. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -117,7 +138,7 @@ export function AddGameDialog({ open, onOpenChange, username, token, onGameAdded
             Search for games to add to your collection
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -141,12 +162,14 @@ export function AddGameDialog({ open, onOpenChange, username, token, onGameAdded
                 Type at least 3 characters to search
               </p>
             )}
-            
-            {searchTerm.length >= 3 && !isSearching && searchResults.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-4">
-                No games found
-              </p>
-            )}
+
+            {searchTerm.length >= 3 &&
+              !isSearching &&
+              searchResults.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No games found
+                </p>
+              )}
 
             {searchResults.map((game) => (
               <div
