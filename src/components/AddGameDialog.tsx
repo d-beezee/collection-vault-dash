@@ -22,6 +22,7 @@ interface AddGameDialogProps {
   username: string;
   token: string;
   onGameAdded: () => void;
+  collection: { id: string }[];
 }
 
 export function AddGameDialog({
@@ -30,6 +31,7 @@ export function AddGameDialog({
   username,
   token,
   onGameAdded,
+  collection,
 }: AddGameDialogProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -171,26 +173,36 @@ export function AddGameDialog({
                 </p>
               )}
 
-            {searchResults.map((game) => (
-              <div
-                key={game.id}
-                className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <span className="font-medium">{game.name}</span>
-                <Button
-                  size="sm"
-                  onClick={() => addGameToCollection(game.id)}
-                  disabled={isAdding}
-                  className="ml-2"
+            {searchResults.map((game) => {
+              const isInCollection = collection.some(item => item.id === game.id.toString());
+              return (
+                <div
+                  key={game.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  {isAdding ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Plus className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-            ))}
+                  <div className="flex-1">
+                    <span className="font-medium">{game.name}</span>
+                    {isInCollection && (
+                      <span className="text-xs text-muted-foreground ml-2">
+                        (Already in collection)
+                      </span>
+                    )}
+                  </div>
+                  <Button
+                    size="sm"
+                    onClick={() => addGameToCollection(game.id)}
+                    disabled={isAdding || isInCollection}
+                    className="ml-2"
+                  >
+                    {isAdding ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Plus className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </div>
       </DialogContent>

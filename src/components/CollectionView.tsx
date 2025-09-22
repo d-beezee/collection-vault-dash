@@ -232,6 +232,7 @@ export function CollectionView({
         username={username}
         token={token}
         onGameAdded={fetchCollection}
+        collection={collection}
       />
     </div>
   );
