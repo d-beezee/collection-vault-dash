@@ -1,10 +1,18 @@
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GameCard } from "./GameCard";
-import { AddGameDialog } from "./AddGameDialog";
-import { LogOut, Search, Gamepad2, Grid3X3, List, RefreshCw, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Gamepad2,
+  Grid3X3,
+  List,
+  LogOut,
+  Plus,
+  RefreshCw,
+  Search,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { AddGameDialog } from "./AddGameDialog";
+import { GameCard } from "./GameCard";
 
 interface GameItem {
   id: string;
@@ -23,7 +31,11 @@ interface CollectionViewProps {
   onLogout: () => void;
 }
 
-export function CollectionView({ username, token, onLogout }: CollectionViewProps) {
+export function CollectionView({
+  username,
+  token,
+  onLogout,
+}: CollectionViewProps) {
   const [collection, setCollection] = useState<GameItem[]>([]);
   const [filteredCollection, setFilteredCollection] = useState<GameItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,12 +47,15 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
   const fetchCollection = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/${username}/collection`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/${username}/collection`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch collection");
@@ -49,11 +64,6 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
       const data: CollectionData = await response.json();
       setCollection(data.items);
       setFilteredCollection(data.items);
-      
-      toast({
-        title: "Collection loaded!",
-        description: `Found ${data.items.length} games in your collection`,
-      });
     } catch (error) {
       toast({
         title: "Error loading collection",
@@ -90,10 +100,12 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
               </div>
               <div>
                 <h1 className="text-xl font-bold">Gaming Collection</h1>
-                <p className="text-sm text-muted-foreground">Welcome back, {username}</p>
+                <p className="text-sm text-muted-foreground">
+                  Welcome back, {username}
+                </p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Button
                 variant="default"
@@ -111,7 +123,9 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
                 disabled={isLoading}
                 className="hover:bg-gaming-surface-hover"
               >
-                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`}
+                />
               </Button>
               <Button
                 variant="ghost"
@@ -135,7 +149,7 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
                 className="pl-10 bg-gaming-surface border-border/50 focus:border-primary"
               />
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
@@ -163,7 +177,10 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
         {isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="aspect-[3/4] bg-gaming-surface rounded-lg animate-pulse" />
+              <div
+                key={i}
+                className="aspect-[3/4] bg-gaming-surface rounded-lg animate-pulse"
+              />
             ))}
           </div>
         ) : filteredCollection.length === 0 ? (
@@ -173,10 +190,9 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
               {searchTerm ? "No games found" : "No games in collection"}
             </h3>
             <p className="text-muted-foreground">
-              {searchTerm 
+              {searchTerm
                 ? "Try adjusting your search terms"
-                : "Your gaming collection appears to be empty"
-              }
+                : "Your gaming collection appears to be empty"}
             </p>
           </div>
         ) : (
@@ -185,19 +201,23 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
               <div>
                 <h2 className="text-2xl font-bold">Your Collection</h2>
                 <p className="text-muted-foreground">
-                  {filteredCollection.length} {filteredCollection.length === 1 ? 'game' : 'games'}
-                  {searchTerm && collection.length !== filteredCollection.length && (
-                    <span> (filtered from {collection.length})</span>
-                  )}
+                  {filteredCollection.length}{" "}
+                  {filteredCollection.length === 1 ? "game" : "games"}
+                  {searchTerm &&
+                    collection.length !== filteredCollection.length && (
+                      <span> (filtered from {collection.length})</span>
+                    )}
                 </p>
               </div>
             </div>
 
-            <div className={
-              viewMode === "grid"
-                ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"
-                : "grid grid-cols-1 md:grid-cols-2 gap-4"
-            }>
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"
+                  : "grid grid-cols-1 md:grid-cols-2 gap-4"
+              }
+            >
               {filteredCollection.map((item) => (
                 <GameCard key={item.id} item={item} />
               ))}
