@@ -18,6 +18,7 @@ import { GameCard } from "./GameCard";
 interface GameItem {
   id: string;
   main: string;
+  collectionId: string;
   game: string;
   image: string;
 }
@@ -217,7 +218,12 @@ export function CollectionView({
               }
             >
               {filteredCollection.map((item) => (
-                <GameCard key={item.id} item={item} />
+                <GameCard
+                  key={item.id}
+                  item={item}
+                  token={token}
+                  username={username}
+                />
               ))}
             </div>
           </>

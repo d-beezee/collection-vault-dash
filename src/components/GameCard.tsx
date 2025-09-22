@@ -1,9 +1,11 @@
 import { Card } from "@/components/ui/card";
-import { ImageOff } from "lucide-react";
+import { API_BASE_URL } from "@/const";
+import { ImageOff, Trash } from "lucide-react";
 import { useState } from "react";
 
 interface GameItem {
   id: string;
+  collectionId: string;
   main: string;
   game: string;
   image: string;
@@ -11,11 +13,27 @@ interface GameItem {
 
 interface GameCardProps {
   item: GameItem;
+  token: string;
+  username: string;
 }
 
-export function GameCard({ item }: GameCardProps) {
+export function GameCard({ item, token, username }: GameCardProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to remove "${item.main}"?`)) {
+      return;
+    }
+    await fetch(`${API_BASE_URL}/${username}/collection/${item.collectionId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    window.location.reload();
+  };
 
   return (
     <Card className="group bg-gradient-card border-border/50 overflow-hidden transition-all duration-300 hover:shadow-card-gaming hover:scale-[1.02] hover:border-primary/30">
@@ -25,7 +43,7 @@ export function GameCard({ item }: GameCardProps) {
             src={item.image}
             alt={item.main}
             className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
+              imageLoaded ? "opacity-100" : "opacity-0"
             }`}
             onLoad={() => setImageLoaded(true)}
             onError={() => setImageError(true)}
@@ -35,7 +53,7 @@ export function GameCard({ item }: GameCardProps) {
             <ImageOff className="w-12 h-12 text-muted-foreground" />
           </div>
         )}
-        
+
         {/* Loading skeleton */}
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-gaming-surface animate-pulse" />
@@ -43,7 +61,7 @@ export function GameCard({ item }: GameCardProps) {
 
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         {/* Game info overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <div className="space-y-1">
@@ -51,11 +69,17 @@ export function GameCard({ item }: GameCardProps) {
               {item.main}
             </h3>
             {item.game !== item.main && (
-              <p className="text-white/80 text-xs">
-                {item.game}
-              </p>
+              <p className="text-white/80 text-xs">{item.game}</p>
             )}
           </div>
+        </div>
+        <div className="absolute top-0 right-0 p-2 transform translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-300">
+          <button
+            onClick={handleDelete}
+            className="group/item p-2 bg-black/50 rounded-full hover:bg-red-800 transition-colors"
+          >
+            <Trash className="w-5 h-5 text-muted-foreground group-hover/item:text-white" />
+          </button>
         </div>
       </div>
 
@@ -69,9 +93,6 @@ export function GameCard({ item }: GameCardProps) {
             {item.game}
           </p>
         )}
-        <p className="text-xs text-muted-foreground/70">
-          ID: {item.id}
-        </p>
       </div>
     </Card>
   );
