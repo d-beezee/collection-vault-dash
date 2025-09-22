@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GameCard } from "./GameCard";
-import { LogOut, Search, Gamepad2, Grid3X3, List, RefreshCw } from "lucide-react";
+import { AddGameDialog } from "./AddGameDialog";
+import { LogOut, Search, Gamepad2, Grid3X3, List, RefreshCw, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface GameItem {
@@ -28,6 +29,7 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const { toast } = useToast();
 
   const fetchCollection = async () => {
@@ -93,6 +95,15 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
             </div>
             
             <div className="flex items-center space-x-2">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => setShowAddDialog(true)}
+                className="bg-gaming-accent hover:bg-gaming-accent/90"
+              >
+                <Plus className="w-4 h-4" />
+                Add Game
+              </Button>
               <Button
                 variant="ghost"
                 size="sm"
@@ -194,6 +205,14 @@ export function CollectionView({ username, token, onLogout }: CollectionViewProp
           </>
         )}
       </main>
+
+      <AddGameDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        username={username}
+        token={token}
+        onGameAdded={fetchCollection}
+      />
     </div>
   );
 }
