@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { API_BASE_URL } from "@/const";
 import { useToast } from "@/hooks/use-toast";
 import {
   Gamepad2,
@@ -47,15 +48,12 @@ export function CollectionView({
   const fetchCollection = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:3000/${username}/collection`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/${username}/collection`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch collection");

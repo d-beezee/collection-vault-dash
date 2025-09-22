@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { API_BASE_URL } from "@/const";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -49,7 +50,7 @@ export function AddGameDialog({
       setIsSearching(true);
       try {
         const response = await fetch(
-          `http://localhost:3000/games?q=${encodeURIComponent(query)}`
+          `${API_BASE_URL}/games?q=${encodeURIComponent(query)}`
         );
 
         if (!response.ok) {
@@ -85,17 +86,14 @@ export function AddGameDialog({
   const addGameToCollection = async (gameId: number) => {
     setIsAdding(true);
     try {
-      const response = await fetch(
-        `http://localhost:3000/${username}/collection`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: gameId }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/${username}/collection`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: gameId }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to add game");
@@ -174,7 +172,9 @@ export function AddGameDialog({
               )}
 
             {searchResults.map((game) => {
-              const isInCollection = collection.some(item => item.id === game.id.toString());
+              const isInCollection = collection.some(
+                (item) => item.id === game.id.toString()
+              );
               return (
                 <div
                   key={game.id}

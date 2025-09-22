@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { API_BASE_URL } from "@/const";
 import { useToast } from "@/hooks/use-toast";
 import { Gamepad2, Lock, User } from "lucide-react";
 import { useState } from "react";
@@ -35,7 +36,7 @@ export function LoginForm({ onLogin, isLoading }: LoginFormProps) {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth", {
+      const response = await fetch(`${API_BASE_URL}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
