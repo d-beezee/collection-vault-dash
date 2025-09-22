@@ -1,10 +1,16 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gamepad2, Lock, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Gamepad2, Lock, User } from "lucide-react";
+import { useState } from "react";
 
 interface LoginFormProps {
   onLogin: (username: string, token: string) => void;
@@ -18,7 +24,7 @@ export function LoginForm({ onLogin, isLoading }: LoginFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!username || !password) {
       toast({
         title: "Missing credentials",
@@ -30,7 +36,7 @@ export function LoginForm({ onLogin, isLoading }: LoginFormProps) {
 
     try {
       const response = await fetch("http://localhost:3000/auth", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -43,7 +49,7 @@ export function LoginForm({ onLogin, isLoading }: LoginFormProps) {
 
       const data = await response.json();
       onLogin(username, data.password);
-      
+
       toast({
         title: "Login successful!",
         description: "Welcome to your gaming collection",
