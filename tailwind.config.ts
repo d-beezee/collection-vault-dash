@@ -57,6 +57,27 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        gaming: {
+          primary: "hsl(var(--gaming-primary))",
+          secondary: "hsl(var(--gaming-secondary))",
+          accent: "hsl(var(--gaming-accent))",
+          surface: "hsl(var(--gaming-surface))",
+          "surface-hover": "hsl(var(--gaming-surface-hover))",
+        },
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-surface": "var(--gradient-surface)",
+        "gradient-card": "var(--gradient-card)",
+      },
+      boxShadow: {
+        "gaming": "var(--shadow-gaming)",
+        "card-gaming": "var(--shadow-card)",
+        "glow": "var(--glow-primary)",
+      },
+      transitionTimingFunction: {
+        "smooth": "var(--transition-smooth)",
+        "spring": "var(--transition-spring)",
       },
       borderRadius: {
         lg: "var(--radius)",
