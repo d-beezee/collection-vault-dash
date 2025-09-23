@@ -98,8 +98,8 @@ export function CollectionView({
                 <Gamepad2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
               </div>
               <div className="min-w-0 flex-1 sm:flex-none">
-                <h1 className="text-lg sm:text-xl font-bold truncate">Gaming Collection</h1>
-                <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                <h1 className="text-lg sm:text-xl font-bold font-display truncate">Gaming Collection</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground truncate font-medium">
                   Welcome back, {username}
                 </p>
               </div>
@@ -187,7 +187,7 @@ export function CollectionView({
         ) : filteredCollection.length === 0 ? (
           <div className="text-center py-12 sm:py-16 px-4">
             <Gamepad2 className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground mx-auto mb-3 sm:mb-4" />
-            <h3 className="text-lg sm:text-xl font-medium mb-2">
+            <h3 className="text-lg sm:text-xl font-medium font-display mb-2">
               {searchTerm ? "No games found" : "No games in collection"}
             </h3>
             <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto">
@@ -200,7 +200,7 @@ export function CollectionView({
           <>
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold">Your Collection</h2>
+                <h2 className="text-xl sm:text-2xl font-bold font-display">Your Collection</h2>
                 <p className="text-sm sm:text-base text-muted-foreground">
                   {filteredCollection.length}{" "}
                   {filteredCollection.length === 1 ? "game" : "games"}
