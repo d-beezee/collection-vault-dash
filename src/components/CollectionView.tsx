@@ -137,36 +137,36 @@ export function CollectionView({
             </div>
           </div>
 
-          {/* Search and controls */}
-          <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+          {/* Search and controls - Desktop only */}
+          <div className="mt-3 sm:mt-4 hidden sm:flex flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search games..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-gaming-surface border-border/50 focus:border-primary h-9 sm:h-10"
+                className="pl-10 bg-gaming-surface border-border/50 focus:border-primary h-10"
               />
             </div>
 
-            <div className="flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2">
+            <div className="flex items-center space-x-2">
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode("grid")}
-                className="hover:bg-gaming-surface-hover h-9 sm:h-10 px-3 sm:px-4"
+                className="hover:bg-gaming-surface-hover h-10 px-4"
               >
                 <Grid3X3 className="w-4 h-4" />
-                <span className="ml-1 sm:ml-2">Grid</span>
+                <span className="ml-2">Grid</span>
               </Button>
               <Button
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode("list")}
-                className="hover:bg-gaming-surface-hover h-9 sm:h-10 px-3 sm:px-4"
+                className="hover:bg-gaming-surface-hover h-10 px-4"
               >
                 <List className="w-4 h-4" />
-                <span className="ml-1 sm:ml-2">List</span>
+                <span className="ml-2">List</span>
               </Button>
             </div>
           </div>
@@ -174,7 +174,7 @@ export function CollectionView({
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-20 sm:pb-6">
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
@@ -231,6 +231,39 @@ export function CollectionView({
           </>
         )}
       </main>
+
+      {/* Mobile Search and Controls Bar - Fixed Bottom */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border/50 p-3 z-40">
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search games..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-gaming-surface border-border/50 focus:border-primary h-10"
+            />
+          </div>
+          <div className="flex items-center space-x-1">
+            <Button
+              variant={viewMode === "grid" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("grid")}
+              className="hover:bg-gaming-surface-hover h-10 w-10 p-0"
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className="hover:bg-gaming-surface-hover h-10 w-10 p-0"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
 
       <AddGameDialog
         open={showAddDialog}
