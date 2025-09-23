@@ -76,9 +76,10 @@ export function GameCard({ item, token, username }: GameCardProps) {
         <div className="absolute top-0 right-0 p-2 transform translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-300">
           <button
             onClick={handleDelete}
-            className="group/item p-2 bg-black/50 rounded-full hover:bg-red-800 transition-colors"
+            className="group/item relative p-2.5 bg-gaming-surface/90 backdrop-blur-sm rounded-xl border border-border/30 hover:bg-gradient-to-br hover:from-red-500/20 hover:to-red-600/30 hover:border-red-400/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/25 active:scale-95"
           >
-            <Trash className="w-5 h-5 text-muted-foreground group-hover/item:text-white" />
+            <Trash className="w-4 h-4 text-muted-foreground group-hover/item:text-red-400 transition-colors duration-300" />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 pointer-events-none" />
           </button>
         </div>
       </div>
