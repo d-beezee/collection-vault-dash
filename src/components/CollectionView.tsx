@@ -21,6 +21,7 @@ interface GameItem {
   collectionId: string;
   game: string;
   image: string;
+  rating?: number;
 }
 
 interface CollectionData {
